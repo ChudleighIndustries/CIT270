@@ -6,35 +6,49 @@ const port = 3000;
 
 const bodyParser = require ('body-parser');
 
+const Redis = require ('redis');
+
+const redisClient = Redis.createClient({url:"redis://127.0.0.1:6379"});
+
 const {v4: uuidv4} = require('uuid');
 
 app.use(bodyParser.json()); //This looks for incoming data
 
-app.get("/",(req, res) => {
-    res.send("hello levi");
+app.use(express.static('public'));
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+app.get("/", (req, res)=> {
+    res.send("Hello Levi");
 });
 
-app.post('/login', (req,res) => {
+app.get("/validate", async(req, res) =>{
+    const loginToken = req.cookies.stedicookie;
+    const loginUser = await redisClient.hGet('TokenMap', loginToken)
+    res.send(loginUser);
+});
+
+app.post('/login', async(req, res) =>{
     const loginUser = req.body.userName;
-    const loginPassword = req.body.password; //Access the password data in the body 
-    console.log('login username: '+loginUser);
-    if (loginUser=="levichud@gmail.com" && loginPassword=="P@$$w0rD"){
-        const loginToken = uuidv4().toString();
+    const loginPassword = req.body.password;
+    console.log(req.body);
+    console.log('Login username: '+loginUser);
+    const correctPassword = await redisClient.hGet('UserMap', loginUser);
+    if (loginPassword==correctPassword){
+        const loginToken = uuidv4();
+        await redisClient.hSet('TokenMap', loginToken, loginUser);
+        res.cookie('stedicookie',loginToken);
         res.send(loginToken);
     } else {
-    res.send(401); //unauthorized
-    res.send('Inncorrect password for '+loginUser);
+        res.status(401);
+        res.send('Incorrect password for ' +loginUser);
     }
-})
-
-app.listen(port,() => {
-    console.log("listening");
 });
 
-
-
-
-
+app.listen(port, () =>{
+    redisClient.connect();
+    console.log("Listening");
+});
 
 //  http://localhost:3000
 // this is going the be the website needed to see the website on the listening port
