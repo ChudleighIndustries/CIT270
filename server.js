@@ -17,7 +17,7 @@ app.use(bodyParser.json()); //This looks for incoming data
 app.use(express.static('public'));
 app.post('/rapidsteptest', async (req, res)=>{
     const steps = req.body;
-    await redisClient.zAdd('steps', steps, 0);
+   await redisClient.zAdd('Steps',0,steps);
     console.log("Steps", steps);
     res.send('saved');
     });
