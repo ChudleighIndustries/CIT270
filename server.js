@@ -15,6 +15,12 @@ const {v4: uuidv4} = require('uuid');
 app.use(bodyParser.json()); //This looks for incoming data
 
 app.use(express.static('public'));
+app.post('/rapidsteptest', async (req, res)=>{
+    const steps = req.body;
+    await redisClient.zAdd('steps', steps, 0);
+    console.log("Steps", steps);
+    res.send('saved');
+    });
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 

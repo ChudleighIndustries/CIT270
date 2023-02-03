@@ -19,7 +19,8 @@
         counterbutton = document.getElementById('counterbutton');
         let hash= location.hash;//will include the #
         let hashparts = hash.split("#");
-        const cookie = document.cookie
+        const cookie = document.cookie;
+        const cookieValue = document.cookie
         .split(';')
         .find((row) => row.startsWith('stedicookie-'))
         ?.split9('=')[1];
@@ -49,8 +50,7 @@
                 401: () => window.location.href="/",
             },
             headers: { "suresteps.session.token": usertoken},
-            contentType: "application/text",
-            dataType: 'text'
+            contentType: "application/json"
         });
 
     }
@@ -83,7 +83,7 @@
         let tokenEmail="";
         $.ajax({
            type: 'GET',
-            url: '/validate/'+usertoken,
+            url: '/validate',
             success: function(data){
                if (data==""){
                  window.location="/"
@@ -112,7 +112,7 @@
         	startandstop();
         	let testTime = stepTime-starttime;
             let rapidStepTest = {
-               token: usertoken,
+               //token: usertoken,
                startTime: starttime,
                stopTime: stepTime,
                testTime: testTime,
