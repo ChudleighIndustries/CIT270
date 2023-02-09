@@ -107,3 +107,4 @@ dist
 server.cert
 
 server.key 
+# this is so github does not push the private key

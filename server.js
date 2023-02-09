@@ -18,12 +18,12 @@ app.use(async function (req, res, next){
 var cookie, req,cookies,stedicookie;
 if (cookie === undefined && ! req.url.includes('login')){
     req.url !== '/'){}
-    // no set a new cookie
+    // no set a new cookie still ok
     req.status(401);
     res.send('no cookie');
 }
 else{
-    // yes a cookie was already there
+    // yes a cookie was already there before good
     res.status(200);
     next();
 }
