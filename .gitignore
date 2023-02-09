@@ -91,14 +91,19 @@ dist
 # vuepress build output
 .vuepress/dist
 
-# Serverless directories
-.serverless/
+# Serverless directories   
+.serverless/   
 
-# FuseBox cache
-.fusebox/
+# FuseBox cache   
+.fusebox/   
 
-# DynamoDB Local files
-.dynamodb/
+# DynamoDB Local files   
+.dynamodb/   
 
-# TernJS port file
-.tern-port
+# TernJS port file   
+.tern-port   
+
+
+server.cert
+
+server.key 

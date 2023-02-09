@@ -14,10 +14,25 @@ const {v4: uuidv4} = require('uuid');
 
 app.use(bodyParser.json()); //This looks for incoming data
 
+app.use(async function (req, res, next){
+var cookie, req,cookies,stedicookie;
+if (cookie === undefined && ! req.url.includes('login')){
+    req.url !== '/'){}
+    // no set a new cookie
+    req.status(401);
+    res.send('no cookie');
+}
+else{
+    // yes a cookie was already there
+    res.status(200);
+    next();
+}
+})
+
 app.use(express.static('public'));
 app.post('/rapidsteptest', async (req, res)=>{
     const steps = req.body;
-   await redisClient.zAdd('Steps',0,steps);
+   await redisClient.zAdd('Steps',[{score:0,value:JSON.stringify(steps)}])
     console.log("Steps", steps);
     res.send('saved');
     });
