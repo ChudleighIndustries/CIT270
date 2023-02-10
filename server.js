@@ -2,7 +2,7 @@ const express = require ("express");
 
 const app = express();
 
-const port = 3000;
+const port = 443;
 
 const bodyParser = require ('body-parser');
 
@@ -12,39 +12,46 @@ const redisClient = Redis.createClient({url:"redis://127.0.0.1:6379"});
 
 const {v4: uuidv4} = require('uuid');
 
-app.use(bodyParser.json()); //This looks for incoming data
+const cookieParser = require("cookie-parser");
 
-app.use(async function (req, res, next){
-var cookie, req,cookies,stedicookie;
-if (cookie === undefined && ! req.url.includes('login')){
-    req.url !== '/'){}
-    // no set a new cookie still ok
-    req.status(401);
-    res.send('no cookie');
-}
-else{
-    // yes a cookie was already there before good
-    res.status(200);
-    next();
-}
-})
+const https = require('https');
 
-app.use(express.static('public'));
-app.post('/rapidsteptest', async (req, res)=>{
-    const steps = req.body;
-   await redisClient.zAdd('Steps',[{score:0,value:JSON.stringify(steps)}])
-    console.log("Steps", steps);
-    res.send('saved');
-    });
-const cookieParser = require('cookie-parser');
+const fs = require('fs');
+
 app.use(cookieParser());
 
+app.use(bodyParser.json()); //This looks for incoming data
+
+app.use(express.static('public'));
+
+app.use(async function(req, res, next){
+    var cookie = req.cookies.stedicookie;
+    if(cookie === undefined && !req.url.includes("login") && !req.url.includes("html") && req.url !== "/" && !req.url.includes('css') && !req.url.includes('js') && !req.url.includes('ico')) {
+        // If no, set a new cookie
+        res.status(401)
+        res.send("no cookie");
+    }
+    else{
+        // If yes, cookie was already present
+        res.status(200);
+        next();
+    }
+});
+
+app.post('/rapidsteptest', async (req, res)=>{
+    const steps = req.body;
+    await redisClient.zAdd('Steps',[{score:0,value:JSON.stringify(steps)}]);
+    console.log('Steps', steps);
+    res.send('saved');
+});
+
 app.get("/", (req, res)=> {
-    res.send("Hello Levi");
+    res.send("Hello Micah");
 });
 
 app.get("/validate", async(req, res) =>{
     const loginToken = req.cookies.stedicookie;
+    console.log("loginToken", loginToken)
     const loginUser = await redisClient.hGet('TokenMap', loginToken)
     res.send(loginUser);
 });
@@ -66,10 +73,19 @@ app.post('/login', async(req, res) =>{
     }
 });
 
-app.listen(port, () =>{
-    redisClient.connect();
-    console.log("Listening");
-});
+//app.listen(port, () =>{
+//   redisClient.connect();
+//  console.log("Listening");
+//});
 
-//  http://localhost:3000
-// this is going the be the website needed to see the website on the listening port
+https.createServer(
+   {
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.cert'),
+ca:fs.readFileSync('./chain.pem')
+},
+app
+).listen(port, ()=>{
+    redisClient.connect();
+    console.log('Listening on port: '+port);
+})
