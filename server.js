@@ -46,7 +46,7 @@ app.post('/rapidsteptest', async (req, res)=>{
 });
 
 app.get("/", (req, res)=> {
-    res.send("Hello Micah");
+    res.send("Hello World!");
 });
 
 app.get("/validate", async(req, res) =>{
