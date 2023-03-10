@@ -1,0 +1,36 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: cit270leviservice
+spec:
+  replica:
+  selector:
+    matchLabels:
+      app: cit270leviservice
+  template:
+    metadata:
+      name:cit270leviservice:
+      labels:
+       app: citleviservice
+      spec:
+       containers:
+       - name: cit270leviservice
+       image: cit-270-kubernetes-379820/levi-api
+       volumeMounts:
+         - name: ssl
+         mountPath: "/etc/letsencrypt/live/live/SSL"
+       command: ["npm"]
+       args: ["runs", "start"]
+       resources:
+         requests:
+           cpu: 0.125
+           memory: 500Mi
+         limits:
+           cpu: 0.125
+           memory: 600Mi
+       imagePullPolicy: Always
+      volumes:
+       - name: ssl
+       secret:
+         secretName: levicerts
+
