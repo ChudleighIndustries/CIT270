@@ -110,3 +110,7 @@ server.key
 # this is so github does not push the private key
 
 node_modules
+
+cert.pem
+privchain.pem
+fullchain1.pem
