@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: cit270leviservice
-        image: cit-270-kubernetes-379820
+        image: gcr.io/cit-270-kubernetes-379820/levi-api
         volumeMounts:
         - name: ssl
           mountPath: "/etc/letsencrypt/live/levichudleigh.cit270.com/"
