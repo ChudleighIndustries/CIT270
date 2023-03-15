@@ -31,25 +31,25 @@ spec:
             - mountPath: /data
               name: redis-levi-volume
   volumeClaimTemplates:
-    - metadata:
-      name: redis-levi-volume
+  - metadata:
+     name: redis-levi-volume
     spec:
       accessModes:
         - ReadWriteOnce
-      resourses:
+      resources:
         requests:
           storage: 10Gi
 ---
-apiVersion: v/1
+apiVersion: v1
 kind: Service
 metadata:
   name: redis-stedi-levi
 spec:
   ports:
-    - ports: 6397
+    - port: 6397
       name: redis
   clusterIP: None
   selector:
-    app:redis-stedi-levi
+    app: redis-stedi-levi
 
 
