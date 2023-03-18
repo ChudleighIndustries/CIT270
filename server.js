@@ -8,7 +8,7 @@ const bodyParser = require ('body-parser');
 
 const Redis = require ('redis');
 
-const redisClient = Redis.createClient({url:"redis://127.0.0.1:6379"});
+const redisClient = Redis.createClient({url:"redis://default:levi@redis-stedi-levi:6379"});
 
 const {v4: uuidv4} = require('uuid');
 
@@ -82,7 +82,7 @@ https.createServer(
    {
     key: fs.readFileSync('/etc/letsencrypt/live/levichudleigh.cit270.com/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/levichudleigh.cit270.com/cert.pem'),
-ca:fs.readFileSync('/etc/letsencrypt/live/levichudleigh.cit270.com/chain.pem')
+ca:fs.readFileSync('/etc/letsencrypt/live/levichudleigh.cit270.com/fullchain.pem')
 },
 app
 ).listen(port, ()=>{
